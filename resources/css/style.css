@@ -1,0 +1,32 @@
+/* public/css/custom.css */
+
+/* Ajoute tes styles personnalisés ici */
+
+body {
+    font-family: 'Arial', sans-serif;
+}
+
+button {
+    background-color: #4CAF50; /* vert */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Ajout d'un style spécifique pour les champs du formulaire */
+input[type="text"], input[type="number"], input[type="date"], select {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 4px;
+    width: 100%;
+}
+
+input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus, select:focus {
+    border-color: #4CAF50; /* Bordure verte lorsqu'on est en focus */
+}
