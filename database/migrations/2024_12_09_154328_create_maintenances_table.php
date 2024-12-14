@@ -9,14 +9,15 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('maintenances', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('machine_id')->constrained()->onDelete('cascade');
-            $table->dateTime('date_maintenance');
-            $table->text('description')->nullable();
-            $table->dateTime('prochaine_maintenance')->nullable();
+            $table->string('name'); // Nom de la maintenance
+            $table->text('description'); // Description détaillée de la maintenance
+            $table->timestamp('start_date'); // Date de début de la maintenance
+            $table->timestamp('end_date'); // Date de fin de la maintenance
+            $table->enum('status', ['pending', 'completed', 'in_progress']); // Statut de la maintenance
             $table->timestamps();
         });
     }

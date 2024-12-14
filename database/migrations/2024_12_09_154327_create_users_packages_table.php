@@ -13,19 +13,15 @@ return new class extends Migration
     {
         Schema::create('users_packages', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('package_id');
-            $table->dateTime('reservation_date');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('package_id')->constrained()->onDelete('cascade');
+            $table->timestamp('reservation_date');
             $table->integer('duration');
-            $table->enum('status', ['confirmée', 'annulée']);
+            $table->enum('status', ['active', 'inactive']); // Par exemple
             $table->timestamps();
-
-            // Clés étrangères
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('package_id')->references('id')->on('packages')->onDelete('cascade');
         });
     }
-    
+
     /**
      * Reverse the migrations.
      */

@@ -12,6 +12,12 @@ class UserController extends Controller
         return view('users.index', compact('users')); // Envoie les données à la vue
     }
 
+    public function packages()
+    {
+        return $this->belongsToMany(Package::class)->withPivot('reservation_date', 'duration', 'status');
+    }
+
+
     public function create()
     {
         return view('users.create'); // Retourne la vue pour créer un utilisateur
@@ -21,43 +27,56 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nom' => 'required|string|max:100',
-            'prenom' => 'required|string|max:100',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:8',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
             'role' => 'required|in:joueur,employé',
         ]);
 
-        $validated['password'] = bcrypt($validated['password']);
-        return User::create($validated);
+        User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => bcrypt($validated['password']), // hash mdp
+            'role' => $validated['role'],
+        ]);
+
+        // Redirection avec message de succès
+        return redirect()->route('users.index')->with('success', 'Utilisateur créé avec succès !');
     }
+
 
     public function show(User $user)
     {
-        return $user; // Affiche un utilisateur
+        return view('users.show', compact('user')); // Affiche un utilisateur
+    }
+
+    public function edit(User $user)
+    {
+        return view('users.edit', compact('user'));
     }
 
     public function update(Request $request, User $user)
     {
         $validated = $request->validate([
-            'nom' => 'sometimes|string|max:100',
-            'prenom' => 'sometimes|string|max:100',
-            'email' => 'sometimes|email|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:8',
-            'role' => 'sometimes|in:joueur,employé',
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email,' . $user->id,
+        'password' => 'nullable|min:8', // Le mot de passe est facultatif
+        'role' => 'required|in:joueur,employé',
         ]);
 
-        if (isset($validated['password'])) {
-            $validated['password'] = bcrypt($validated['password']);
+        if ($request->filled('password')) {
+            $validated['password'] = bcrypt($validated['password']); // Hasher le mot de passe
+        } else {
+            unset($validated['password']); // Ne pas modifier le mot de passe si vide
         }
 
         $user->update($validated);
-        return $user;
+
+        return redirect()->route('users.index')->with('success', 'Utilisateur modifié avec succès');
     }
 
     public function destroy(User $user)
     {
         $user->delete();
-        return response()->json(['message' => 'Utilisateur supprimé']);
-    }
+        return redirect()->route('users.index')->with('success', 'Utilisateur supprimé avec succès');    }
 }

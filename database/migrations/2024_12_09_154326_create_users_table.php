@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->enum('role', ['joueur', 'employé']);
+            $table->rememberToken(); // Ajoute la colonne 'remember_token'
+            $table->timestamp('email_verified_at')->nullable(); // Ajout de la colonne 'email_verified_at'
             $table->timestamps();
         });
     }
@@ -29,4 +31,3 @@ return new class extends Migration
         Schema::dropIfExists('users');
     }
 };
-
