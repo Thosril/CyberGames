@@ -41,6 +41,27 @@ class PackageController extends Controller
         return redirect()->route('packages.index')->with('success', 'Package créé avec succès');
     }
 
+    public function purchase(Request $request, $packageId)
+    {
+        $user = auth()->user();
+        $package = Package::findOrFail($packageId);
+
+        // Vérifiez si l'utilisateur a déjà acheté ce forfait
+        if ($user->packages()->where('package_id', $packageId)->exists()) {
+            return redirect()->route('profile')->with('error', 'Vous avez déjà acheté ce forfait.');
+        }
+
+        // Associez le forfait avec des informations supplémentaires
+        $user->packages()->attach($package->id, [
+            'reservation_date' => now(),
+            'duration' => $request->input('duration', 30), // Exemple : durée par défaut de 30 jours
+            'status' => 'active',
+        ]);
+
+        return redirect()->route('profile')->with('success', 'Forfait acheté avec succès !');
+    }
+
+
     /**
      * Display the specified resource.
      */

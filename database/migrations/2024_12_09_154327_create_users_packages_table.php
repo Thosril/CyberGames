@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('package_id')->constrained()->onDelete('cascade');
-            $table->timestamp('reservation_date');
+            $table->timestamp('reservation_date')->useCurrent();
             $table->integer('duration');
-            $table->enum('status', ['active', 'inactive']); // Par exemple
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
     }

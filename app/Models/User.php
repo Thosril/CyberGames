@@ -66,6 +66,13 @@ class User extends Authenticatable
         ];
     }
 
+    public function forfaits()
+    {
+        return $this->belongsToMany(Forfait::class);
+    }
+
+
+
     /**
      * La relation many-to-many entre l'utilisateur et les packages.
      *
@@ -74,6 +81,18 @@ class User extends Authenticatable
     public function packages()
     {
         return $this->belongsToMany(Package::class, 'users_packages')
-                    ->withPivot('reservation_date', 'duration', 'status');
+                ->withPivot('reservation_date', 'duration', 'status')
+                ->withTimestamps();
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_packages')->withPivot('purchase_date')->withTimestamps();
+    }
+
+
+    public function hasRole($role)
+    {
+        return $this->role === $role; // Adaptez cette logique selon votre structure de données
     }
 }

@@ -50,6 +50,13 @@ class UserController extends Controller
         return view('users.show', compact('user')); // Affiche un utilisateur
     }
 
+    // public function __construct()
+    // {
+    //     // Restreindre tout le contrôleur aux employés
+    //     $this->middleware('role:employé');
+    // }
+
+
     public function edit(User $user)
     {
         return view('users.edit', compact('user'));

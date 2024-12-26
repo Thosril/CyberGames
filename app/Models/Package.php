@@ -15,6 +15,9 @@ class Package extends Model
     public function users()
     {
         return $this->belongsToMany(User::class, 'users_packages')
-                    ->withPivot(['reservation_date', 'duration', 'status']);
+                    ->withPivot(['reservation_date', 'duration', 'status'])
+                    ->withTimestamps();
     }
+
+
 }
